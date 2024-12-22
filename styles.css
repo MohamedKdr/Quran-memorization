@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    direction: rtl;
+    background-color: #f7f9fc;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+.container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+textarea, input, button {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+textarea:focus, input:focus, button:focus {
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+textarea {
+    resize: none;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#output {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ecf0f1;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.section:hover {
+    background-color: #d5dadc;
+    transform: scale(1.02);
+}
+
+.section button {
+    margin-top: 10px;
+    background-color: #e74c3c;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.section button:hover {
+    background-color: #c0392b;
+}
+
+.toggle-visibility-btn {
+    margin-right: 10px;
+    background-color: #8e44ad;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-visibility-btn:hover {
+    background-color: #71368a;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تكرار النص للحفظ</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>تكرار النص للحفظ</h1>
+        <textarea id="input-text" placeholder="أدخل النص هنا..." rows="5"></textarea>
+        <input type="number" id="section-count" placeholder="عدد الأقسام" min="1">
+        <input type="number" id="repeat-count" placeholder="عدد التكرار" min="1">
+        <button id="process-btn">تقسيم النص</button>
+        
+        <div id="output" style="display: none;">
+            <h2>الأقسام:</h2>
+            <div id="sections"></div>
+            <button id="download-btn">تحميل الأقسام</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
