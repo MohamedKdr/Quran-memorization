@@ -1,3 +1,31 @@
+let startTime;
+let timerInterval;
+
+function startTimer() {
+    startTime = Date.now();
+    timerInterval = setInterval(() => {
+        const elapsedTime = Date.now() - startTime;
+        const minutes = Math.floor(elapsedTime / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+        document.getElementById("elapsed-time").textContent = `${minutes} دقيقة ${seconds} ثانية`;
+    }, 1000);
+    document.getElementById("timer").style.display = "block";
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+function splitTextIntoParts(text, parts) {
+    const length = text.length;
+    const partSize = Math.ceil(length / parts);
+    const sections = [];
+    for (let i = 0; i < parts; i++) {
+        sections.push(text.slice(i * partSize, (i + 1) * partSize));
+    }
+    return sections;
+}
+
 document.getElementById("process-btn").addEventListener("click", () => {
     const text = document.getElementById("input-text").value.trim();
     const sectionCount = parseInt(document.getElementById("section-count").value);
@@ -16,13 +44,12 @@ document.getElementById("process-btn").addEventListener("click", () => {
         return;
     }
 
-    // تقسيم النص إلى عدد الأقسام المحدد
-    const sections = splitTextIntoParts(text, sectionCount);
+    startTimer();
 
-    // إنشاء الناتج
+    const sections = splitTextIntoParts(text, sectionCount);
     const outputDiv = document.getElementById("output");
     const sectionsDiv = document.getElementById("sections");
-    sectionsDiv.innerHTML = ""; // مسح المحتوى السابق
+    sectionsDiv.innerHTML = "";
 
     sections.forEach((section, index) => {
         const sectionDiv = document.createElement("div");
@@ -31,10 +58,18 @@ document.getElementById("process-btn").addEventListener("click", () => {
             sectionDiv.classList.add("hidden");
         }
 
+        const toggleVisibilityButton = document.createElement("button");
+        toggleVisibilityButton.className = "toggle-visibility-btn";
+        toggleVisibilityButton.innerHTML = "👁️";
+        toggleVisibilityButton.addEventListener("click", () => {
+            const hiddenText = sectionDiv.querySelector(".hidden-text");
+            hiddenText.style.display = hiddenText.style.display === "none" ? "block" : "none";
+        });
+
         let remainingRepeats = repeatCount;
         const repeatText = document.createElement("p");
-        repeatText.innerHTML = `<strong>القسم ${index + 1}:</strong><br>${section}`;
-        
+        repeatText.innerHTML = `<strong>القسم ${index + 1}:</strong><br><span class="hidden-text" style="display: block;">${section}</span>`;
+
         const counterText = document.createElement("p");
         counterText.textContent = `التكرار المتبقي: ${remainingRepeats}`;
 
@@ -49,16 +84,11 @@ document.getElementById("process-btn").addEventListener("click", () => {
                     repeatButton.textContent = "تم الحفظ!";
                     if (index < sections.length - 1) {
                         sectionsDiv.childNodes[index + 1].classList.remove("hidden");
+                    } else {
+                        document.getElementById("final-output").style.display = "block";
                     }
                 }
             }
-        });
-
-        const toggleVisibilityButton = document.createElement("button");
-        toggleVisibilityButton.className = "toggle-visibility-btn";
-        toggleVisibilityButton.innerHTML = "👁️";
-        toggleVisibilityButton.addEventListener("click", () => {
-            repeatText.style.display = repeatText.style.display === "none" ? "block" : "none";
         });
 
         sectionDiv.appendChild(toggleVisibilityButton);
@@ -68,39 +98,37 @@ document.getElementById("process-btn").addEventListener("click", () => {
         sectionsDiv.appendChild(sectionDiv);
     });
 
-    outputDiv.style.display = "block";
-});
+    const fullTextDiv = document.getElementById("full-text");
+    fullTextDiv.innerHTML = "";
+    const fullTextSection = document.createElement("div");
+    fullTextSection.className = "section";
 
-// دالة لتقسيم النص إلى عدد الأقسام المحدد
-function splitTextIntoParts(text, partCount) {
-    const length = text.length;
-    const partSize = Math.ceil(length / partCount);
-    const parts = [];
+    let remainingRepeatsFullText = repeatCount;
+    const fullTextP = document.createElement("p");
+    fullTextP.innerHTML = `<strong>النص الكامل:</strong><br>${text}`;
 
-    for (let i = 0; i < partCount; i++) {
-        const start = i * partSize;
-        const end = start + partSize;
-        parts.push(text.slice(start, end));
-    }
+    const fullTextCounter = document.createElement("p");
+    fullTextCounter.textContent = `التكرار المتبقي: ${remainingRepeatsFullText}`;
 
-    return parts;
-}
-
-// دالة لتحميل النص
-document.getElementById("download-btn").addEventListener("click", () => {
-    const sections = document.querySelectorAll(".section p:nth-child(3)");
-    let downloadText = "";
-
-    sections.forEach(section => {
-        downloadText += section.innerText + "\n\n";
+    const fullTextRepeatButton = document.createElement("button");
+    fullTextRepeatButton.textContent = "كرر النص الكامل";
+    fullTextRepeatButton.addEventListener("click", () => {
+        if (remainingRepeatsFullText > 0) {
+            remainingRepeatsFullText--;
+            fullTextCounter.textContent = `التكرار المتبقي: ${remainingRepeatsFullText}`;
+            if (remainingRepeatsFullText === 0) {
+                fullTextRepeatButton.disabled = true;
+                fullTextRepeatButton.textContent = "تم الحفظ!";
+                stopTimer();
+            }
+        }
     });
 
-    const blob = new Blob([downloadText], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "sections.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    fullTextSection.appendChild(fullTextP);
+    fullTextSection.appendChild(fullTextCounter);
+    fullTextSection.appendChild(fullTextRepeatButton);
+    fullTextDiv.appendChild(fullTextSection);
+
+    outputDiv.style.display = "block";
+    document.getElementById("final-output").style.display = "none";
 });
