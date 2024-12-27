@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تكرار النص للحفظ</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
         <h1>تكرار النص للحفظ</h1>
         <textarea id="input-text" placeholder="أدخل النص هنا..." rows="5"></textarea>
-        <input type="number" id="section-count" placeholder="عدد الأقسام" min="1">
-        <input type="number" id="repeat-count" placeholder="عدد التكرار" min="1">
+        <div class="input-group">
+            <input type="number" id="section-count" placeholder="عدد الأقسام" min="1">
+            <input type="number" id="repeat-count" placeholder="عدد التكرار" min="1">
+        </div>
         <button id="process-btn">تقسيم النص</button>
-        
+
         <div id="output" style="display: none;">
             <h2>الأقسام:</h2>
             <div id="sections"></div>
             <button id="download-btn">تحميل الأقسام</button>
         </div>
+
+        <div id="final-output" style="display: none;">
+            <h2>النص الكامل:</h2>
+            <div id="full-text"></div>
+        </div>
+
+        <div id="timer" style="display: none; margin-top: 20px;">
+            <h3>الوقت المستغرق: <span id="elapsed-time">0</span> ثانية</h3>
+        </div>
     </div>
-    <script src="script.js"></script>
+ 
 </body>
 </html>
