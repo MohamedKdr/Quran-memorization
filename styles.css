@@ -9,16 +9,22 @@ body {
     align-items: center;
     height: 100vh;
     color: #333;
+    background-image: url('images/newBackground.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .container {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9); /* Adjust background to be slightly transparent */
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     width: 90%;
     max-width: 600px;
+    overflow-y: auto; /* Ensure content is scrollable if it overflows */
+    max-height: 90vh; /* Limit the height to avoid overflow */
 }
 
 h1 {
@@ -31,7 +37,7 @@ textarea, input, button {
     margin-bottom: 15px;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ddd;
+    border: 1px solid #1eff00;
     border-radius: 5px;
     transition: box-shadow 0.3s ease-in-out, background-color 0.3s;
 }
