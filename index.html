@@ -1,38 +1,65 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="أداة مساعدة لحفظ النصوص عبر التكرار والتقسيم">
     <title>تكرار النص للحفظ</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <h1>تكرار النص للحفظ</h1>
-        <textarea id="input-text" placeholder="أدخل النص هنا..." rows="5"></textarea>
-        <div class="input-group">
-            <input type="number" id="section-count" placeholder="عدد الأقسام" min="1">
-            <input type="number" id="repeat-count" placeholder="عدد التكرار" min="1">
-        </div>
-        <button id="process-btn">تقسيم النص</button>
+        <header class="app-header">
+            <h1>تكرار النص للحفظ</h1>
+            <button id="theme-toggle" class="btn-theme">🌙</button>
+        </header>
 
-        <div id="output" style="display: none;">
-            <h2>الأقسام:</h2>
-            <div id="sections"></div>
-            <button id="download-btn">تحميل الأقسام</button>
-        </div>
+        <main class="app-main">
+            <form id="text-form" class="input-form">
+                <div class="form-group">
+                    <label for="input-text">النص المراد حفظه</label>
+                    <textarea id="input-text" placeholder="أدخل النص هنا..." rows="5" required></textarea>
+                </div>
 
-        <div id="final-output" style="display: none;">
-            <h2>النص الكامل:</h2>
-            <div id="full-text"></div>
-        </div>
+                <div class="input-grid">
+                    <div class="form-group">
+                        <label for="section-count">عدد الأقسام</label>
+                        <input type="number" id="section-count" min="1" value="3" required>
+                    </div>
 
-        <div id="timer" style="display: none; margin-top: 20px;">
-            <h3>الوقت المستغرق: <span id="elapsed-time">0</span> ثانية</h3>
-        </div>
+                    <div class="form-group">
+                        <label for="repeat-count">عدد التكرارات</label>
+                        <input type="number" id="repeat-count" min="1" value="5" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">بدء الحفظ</button>
+            </form>
+
+            <div id="output" class="hidden">
+                <h2 class="section-title">الأقسام</h2>
+                <div id="sections" class="sections-container"></div>
+
+                <div class="actions">
+                    <button id="download-btn" class="btn-secondary">تحميل الأقسام</button>
+                    <button id="reset-btn" class="btn-secondary">بدء جديد</button>
+                </div>
+            </div>
+
+            <div id="final-output" class="hidden">
+                <h2 class="section-title">النص الكامل</h2>
+                <div id="full-text" class="full-text-container"></div>
+                <button id="repeat-full-text" class="btn-primary">كرر النص كاملاً</button>
+            </div>
+
+            <div id="timer" class="timer hidden">
+                <div class="timer-content">
+                    <span class="icon">⏳</span>
+                    <span id="elapsed-time">00:00</span>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <script>"script.js"</script>
 </body>
 </html>
