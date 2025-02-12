@@ -197,7 +197,7 @@ button {
 
 .timer {
     position: fixed;
-    left: 2rem;
+    left: 8rem;
     bottom: 2rem;
     background: var(--section-bg);
     padding: 1rem;
