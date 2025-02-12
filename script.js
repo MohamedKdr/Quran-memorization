@@ -8,7 +8,7 @@ class TextRepeater {
         this.totalRepeats = 0;
         this.fullTextRepeats = 0;
         this.sectionsData = [];
-
+        
         this.initialize();
     }
 
@@ -80,19 +80,19 @@ class TextRepeater {
                 <button class="btn-primary repeat-btn">كرر</button>
             </div>
         `;
-
+        
         const toggleBtn = section.querySelector('.toggle-btn');
         const content = section.querySelector('.section-content');
-
+        
         toggleBtn.addEventListener('click', () => {
             content.classList.toggle('hidden');
             toggleBtn.classList.toggle('active');
         });
-
+        
         section.querySelector('.repeat-btn').addEventListener('click', () => {
             this.handleSectionRepeat(section, sectionNumber - 1);
         });
-
+        
         container.appendChild(section);
     }
 
@@ -145,7 +145,7 @@ class TextRepeater {
         this.sectionsContainer.classList.add('hidden');
         this.finalSection.classList.remove('hidden');
         this.fullTextRepeats = this.totalRepeats;
-        this.finalSection.querySelector('.counter').textContent =
+        this.finalSection.querySelector('.counter').textContent = 
             `التكرارات المتبقية: ${this.fullTextRepeats}`;
     }
 
@@ -162,7 +162,7 @@ class TextRepeater {
     }
 
     showCongratulations() {
-        document.getElementById('total-time').textContent =
+        document.getElementById('total-time').textContent = 
             document.getElementById('elapsed-time').textContent;
         document.getElementById('congrats-message').classList.remove('hidden');
     }
@@ -187,7 +187,7 @@ class Timer {
         this.reset();
         this.startTime = Date.now();
         this.timerElement.classList.remove('hidden');
-
+        
         this.interval = setInterval(() => {
             const elapsed = Date.now() - this.startTime;
             this.timeDisplay.textContent = this.formatTime(elapsed);
@@ -216,6 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.setAttribute('data-theme', savedTheme);
     document.getElementById('theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
+    
     new TextRepeater();
 });
