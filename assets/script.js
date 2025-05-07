@@ -167,11 +167,15 @@ class TextRepeater {
     }
 
     handleFinalRepeat() {
+        if (this.fullTextRepeats <= 0) {
+            // Prevent further decrement and actions
+            return;
+        }
         this.fullTextRepeats--;
         const counter = this.finalSection.querySelector('#full-text-counter');
         counter.textContent = this.fullTextRepeats;
-    
-        if (this.fullTextRepeats <= 0) {
+
+        if (this.fullTextRepeats === 0) {
             this.timer.stop();
             this.showCongratulations();
             this.finalSection.classList.add('hidden');
