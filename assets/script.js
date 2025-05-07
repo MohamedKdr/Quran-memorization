@@ -156,12 +156,14 @@ class TextRepeater {
         }
         this.updateProgress();
     }
+
     showFinalSection() {
         this.sectionsContainer.classList.add('hidden');
         this.finalSection.classList.remove('hidden');
         this.fullTextRepeats = this.totalRepeats;
         const counter = this.finalSection.querySelector('#full-text-counter');
         counter.textContent = this.fullTextRepeats;
+        document.getElementById('congrats-message').classList.add('hidden');
     }
 
     handleFinalRepeat() {
@@ -184,6 +186,7 @@ class TextRepeater {
         // Reset timer display
         document.getElementById('elapsed-time').textContent = '00:00';
     }
+
     async saveSession() {
         const sessionData = {
             text: document.getElementById('input-text').value,
@@ -213,6 +216,7 @@ class TextRepeater {
             this.showError('حدث خطأ أثناء حفظ الجلسة');
         }
     }
+
     async showHistory() {
         try {
             const response = await fetch('http://localhost:3000/api/sessions');

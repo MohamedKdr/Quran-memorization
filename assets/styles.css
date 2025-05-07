@@ -34,6 +34,7 @@ body {
     font-size: 1rem;
     text-align: right;
     direction: rtl;
+    padding-top: 3.2rem;
     padding-bottom: 5rem;
 }
 
@@ -501,24 +502,26 @@ input:focus, textarea:focus, select:focus {
     font-size: 0.9rem;
 }
 
-/* Timer Styles */
+/* --- Timer at the top, fixed, transparent --- */
 .timer {
     position: fixed;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--background-color);
-    padding: 0.8rem 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: none;
+    background: rgba(255,255,255,0.7);
+    padding: 0.7rem 1.5rem;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: 0 2px 12px var(--shadow-color);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    z-index: 100;
+    z-index: 1999;
     border: 2px solid var(--accent-color);
-    max-width: 95vw;
+    max-width: 100vw;
     min-width: 180px;
     font-size: 1.05rem;
+    justify-content: center;
 }
 
 .timer.paused {
@@ -555,10 +558,9 @@ input:focus, textarea:focus, select:focus {
     }
 
     .timer {
-        bottom: 0.5rem;
-        padding: 0.6rem 1rem;
         font-size: 0.95rem;
         min-width: 120px;
+        padding: 0.5rem 0.5rem;
     }
 }
 
@@ -584,6 +586,9 @@ input:focus, textarea:focus, select:focus {
     .btn-primary, .btn-secondary, .btn-danger {
         font-size: 0.98rem;
         padding: 0.7rem 1.1rem;
+    }
+    body {
+        padding-top: 3.5rem;
     }
 }
 
