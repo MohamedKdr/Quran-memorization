@@ -40,6 +40,19 @@ body {
     direction: rtl;
 }
 
+.progress-container {
+    margin: 1rem 0;
+    background: rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+}
+
+.progress-bar {
+    height: 10px;
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+    transition: width 0.5s ease;
+}
+
 .container {
     background: var(--background-color);
     padding: 2rem;
@@ -112,6 +125,34 @@ button {
     padding: 0.8rem 2rem;
     border-radius: var(--border-radius);
     font-size: 1.1rem;
+}
+#session-history {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(0,0,0,0.05);
+    border-radius: var(--border-radius);
+}
+
+.history-item {
+    background: var(--section-bg);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+}
+
+.history-item:hover {
+    transform: translateX(-10px);
+}
+
+.btn-secondary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    margin-top: 0.5rem;
+    display: inline-block;
 }
 
 .btn-primary:hover {
@@ -205,6 +246,8 @@ button {
     box-shadow: var(--box-shadow);
     z-index: 100;
     border: 2px solid var(--secondary-color);
+    transform: translateX(-50%);
+    left: 50%;
 }
 
 .timer .icon {
@@ -242,6 +285,16 @@ button {
         transform: translateY(0);
     }
 }
+/* Amélioration des animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.btn-primary:hover {
+    animation: pulse 1s infinite;
+}
 
 @keyframes popIn {
     0% { transform: translate(-50%, -50%) scale(0); }
@@ -255,6 +308,7 @@ button {
     border-color: var(--secondary-color);
 }
 
+
 [data-theme="dark"] textarea,
 [data-theme="dark"] input {
     background: rgba(255, 255, 255, 0.1);
@@ -263,4 +317,21 @@ button {
 
 [data-theme="dark"] .timer {
     border-color: var(--primary-color);
+}
+/* Mode accessible */
+.high-contrast [data-theme="dark"] {
+    --text-color: #fff;
+    --background-color: #000;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .section-controls {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
 }

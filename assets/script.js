@@ -8,7 +8,6 @@ class TextRepeater {
         this.totalRepeats = 0;
         this.fullTextRepeats = 0;
         this.sectionsData = [];
-        
         this.initialize();
     }
 
@@ -139,8 +138,8 @@ class TextRepeater {
         } else {
             this.showFinalSection();
         }
+        this.updateProgress();
     }
-
     showFinalSection() {
         this.sectionsContainer.classList.add('hidden');
         this.finalSection.classList.remove('hidden');
@@ -153,11 +152,12 @@ class TextRepeater {
         this.fullTextRepeats--;
         const counter = this.finalSection.querySelector('.counter');
         counter.textContent = `التكرارات المتبقية: ${this.fullTextRepeats}`;
-
+    
         if (this.fullTextRepeats <= 0) {
             this.timer.stop();
             this.showCongratulations();
             this.finalSection.classList.add('hidden');
+            this.saveSession(); 
         }
     }
 
@@ -166,12 +166,66 @@ class TextRepeater {
             document.getElementById('elapsed-time').textContent;
         document.getElementById('congrats-message').classList.remove('hidden');
     }
+    async saveSession() {
+        const sessionData = {
+            text: document.getElementById('input-text').value,
+            sections: parseInt(document.getElementById('section-count').value),
+            repeats: this.totalRepeats,
+            time: document.getElementById('elapsed-time').textContent,
+            date: new Date().toLocaleString('ar-EG')
+        };
+    
+        // Sauvegarde dans localStorage
+        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
+        history.unshift(sessionData);
+        localStorage.setItem('memorizationHistory', JSON.stringify(history.slice(0, 10)));
+        
+        // Afficher l'historique
+        this.showHistory();
+    }
+    showHistory() {
+        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
+        const container = document.getElementById('history-list');
+        const historySection = document.getElementById('session-history');
+        
+        if (history.length > 0) {
+            historySection.classList.remove('hidden');
+            container.innerHTML = history.map((session, index) => `
+                <div class="history-item">
+                    <h3>الجلسة ${index + 1} (${session.date})</h3>
+                    <p>الوقت: ${session.time} | الأقسام: ${session.sections}</p>
+                    <button onclick="app.loadSession(${index})" class="btn-secondary">تحميل</button>
+                </div>
+            `).join('');
+        }
+    }
+    
+    loadSession(index) {
+        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
+        const session = history[index];
+        
+        if (session) {
+            document.getElementById('input-text').value = session.text;
+            document.getElementById('section-count').value = session.sections;
+            document.getElementById('repeat-count').value = session.repeats;
+            alert('تم تحميل الجلسة! انقر على "بدء الحفظ" للبدء');
+        }
+    }
+
 
     toggleTheme() {
         const isDark = document.body.getAttribute('data-theme') === 'dark';
         document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
         document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
         localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+
+    updateProgress() {
+        const completed = this.sectionsData.filter(s => s.completed).length;
+        const total = this.sectionsData.length;
+        const progress = (completed / total) * 100;
+        
+        document.querySelector('.progress-bar').style.width = `${progress}%`;
     }
 }
 
@@ -196,9 +250,10 @@ class Timer {
 
     formatTime(ms) {
         const totalSeconds = Math.floor(ms / 1000);
-        const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
         const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-        return `${minutes}:${seconds}`;
+        return hours > 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
     }
 
     stop() {
