@@ -186,9 +186,40 @@ class TextRepeater {
     showCongratulations() {
         const totalTime = document.getElementById('elapsed-time').textContent;
         document.getElementById('total-time').textContent = totalTime;
-        document.getElementById('congrats-message').classList.remove('hidden');
-        // Reset timer display
-        document.getElementById('elapsed-time').textContent = '00:00';
+        const congratsMsg = document.getElementById('congrats-message');
+        congratsMsg.classList.remove('hidden');
+        congratsMsg.style.display = 'flex';
+        congratsMsg.style.justifyContent = 'center';
+        congratsMsg.style.alignItems = 'center';
+        congratsMsg.style.position = 'fixed';
+        congratsMsg.style.top = '0';
+        congratsMsg.style.left = '0';
+        congratsMsg.style.width = '100vw';
+        congratsMsg.style.height = '100vh';
+        congratsMsg.style.background = 'rgba(255,255,255,0.95)';
+        congratsMsg.style.zIndex = '3000';
+        // Hide timer
+        document.getElementById('timer').classList.add('hidden');
+        // Add close button
+        let okBtn = document.getElementById('congrats-ok-btn');
+        if (!okBtn) {
+            okBtn = document.createElement('button');
+            okBtn.id = 'congrats-ok-btn';
+            okBtn.className = 'btn-primary';
+            okBtn.textContent = 'حسناً';
+            okBtn.style.marginTop = '1.5rem';
+            okBtn.onclick = function() {
+                congratsMsg.classList.add('hidden');
+                congratsMsg.style.display = '';
+                congratsMsg.style.position = '';
+                congratsMsg.style.background = '';
+                congratsMsg.style.width = '';
+                congratsMsg.style.height = '';
+                congratsMsg.style.zIndex = '';
+                document.getElementById('timer').classList.remove('hidden');
+            };
+            congratsMsg.appendChild(okBtn);
+        }
     }
 
     async saveSession() {

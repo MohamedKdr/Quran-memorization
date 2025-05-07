@@ -68,40 +68,31 @@ body {
 
 /* Mobile Menu Button */
 .menu-toggle {
-    position: absolute;
-    right: 1rem;
-    top: 0.7rem;
-    display: block;
-    background: none;
-    border: none;
-    color: var(--background-color);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.5rem;
-    z-index: 2300;
+    display: none !important;
 }
 
 /* Side Navigation */
 .nav-links {
-    position: fixed;
-    top: 0;
-    right: -280px;
-    width: 260px;
-    height: 100vh;
-    background: var(--primary-color);
-    padding: 4rem 1rem 1rem 1rem;
-    transition: right 0.3s cubic-bezier(.77,0,.18,1);
-    z-index: 2200;
-    box-shadow: -2px 0 10px var(--shadow-color);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: flex-end;
-    text-align: right;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    gap: 1.2rem !important;
+    right: 0 !important;
+    left: auto !important;
+    top: auto !important;
+    z-index: 2000 !important;
+    text-align: right !important;
 }
 
-.nav-links.active {
-    right: 0;
+.nav-links li {
+    list-style: none;
 }
 
 .nav-links a {
@@ -129,21 +120,7 @@ body {
 
 /* Overlay for mobile menu */
 .menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 2100;
-}
-
-.menu-overlay.active {
-    opacity: 1;
-    visibility: visible;
+    display: none !important;
 }
 
 /* Adjust main content for fixed header */
@@ -581,6 +558,16 @@ input:focus, textarea:focus, select:focus {
     }
     body {
         padding-top: 3.5rem;
+    }
+    .nav-links {
+        gap: 0.5rem !important;
+    }
+    .nav-links a {
+        font-size: 0.95rem !important;
+        padding: 0.6rem 0.7rem !important;
+    }
+    .logo h1 {
+        font-size: 1.1rem !important;
     }
 }
 

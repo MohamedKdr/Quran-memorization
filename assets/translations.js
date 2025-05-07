@@ -4,12 +4,11 @@ const translations = {
         nav: {
             home: 'صفحة الحفظ',
             sessions: 'الجلسات السابقة',
-            virtues: 'فضل الحفظ',
-            settings: 'الإعدادات'
+            virtues: 'فضل الحفظ'
         },
         // Main Page
         main: {
-            title: 'حفظ القرآن',
+            title: 'المحظرة',
             inputLabel: 'النص المراد حفظه',
             inputPlaceholder: 'أدخل النص هنا...',
             sectionsLabel: 'عدد الأقسام',
@@ -45,23 +44,9 @@ const translations = {
             intercession: 'شفاعة القرآن',
             multipliedReward: 'الأجر المضاعف'
         },
-        // Settings Page
-        settings: {
-            title: 'الإعدادات',
-            language: 'اللغة',
-            theme: 'المظهر',
-            sound: 'الصوت',
-            notifications: 'الإشعارات',
-            lightMode: 'فاتح',
-            darkMode: 'داكن',
-            enableSound: 'تفعيل الأصوات',
-            enableNotifications: 'تفعيل الإشعارات',
-            saveSettings: 'حفظ الإعدادات',
-            settingsSaved: 'تم حفظ الإعدادات بنجاح'
-        },
         // Footer
         footer: {
-            copyright: '© 2024 حفظ القرآن. جميع الحقوق محفوظة'
+            copyright: '© 2024 المحظرة. جميع الحقوق محفوظة'
         }
     },
     en: {
@@ -69,12 +54,11 @@ const translations = {
         nav: {
             home: 'Memorization',
             sessions: 'Previous Sessions',
-            virtues: 'Virtues',
-            settings: 'Settings'
+            virtues: 'Virtues'
         },
         // Main Page
         main: {
-            title: 'Quran Memorization',
+            title: 'Al-Mahdara',
             inputLabel: 'Text to Memorize',
             inputPlaceholder: 'Enter text here...',
             sectionsLabel: 'Number of Sections',
@@ -110,23 +94,9 @@ const translations = {
             intercession: 'Intercession of the Quran',
             multipliedReward: 'Multiplied Reward'
         },
-        // Settings Page
-        settings: {
-            title: 'Settings',
-            language: 'Language',
-            theme: 'Theme',
-            sound: 'Sound',
-            notifications: 'Notifications',
-            lightMode: 'Light',
-            darkMode: 'Dark',
-            enableSound: 'Enable Sound',
-            enableNotifications: 'Enable Notifications',
-            saveSettings: 'Save Settings',
-            settingsSaved: 'Settings saved successfully'
-        },
         // Footer
         footer: {
-            copyright: '© 2024 Quran Memorization. All rights reserved'
+            copyright: '© 2024 Al-Mahdara. All rights reserved'
         }
     },
     fr: {
@@ -134,8 +104,7 @@ const translations = {
         nav: {
             home: 'Mémorisation',
             sessions: 'Sessions Précédentes',
-            virtues: 'Vertus',
-            settings: 'Paramètres'
+            virtues: 'Vertus'
         },
         // Main Page
         main: {
@@ -174,20 +143,6 @@ const translations = {
             honor: 'Honneur dans ce Monde et l\'Au-delà',
             intercession: 'Intercession du Coran',
             multipliedReward: 'Récompense Multipliée'
-        },
-        // Settings Page
-        settings: {
-            title: 'Paramètres',
-            language: 'Langue',
-            theme: 'Thème',
-            sound: 'Son',
-            notifications: 'Notifications',
-            lightMode: 'Clair',
-            darkMode: 'Sombre',
-            enableSound: 'Activer le Son',
-            enableNotifications: 'Activer les Notifications',
-            saveSettings: 'Enregistrer les Paramètres',
-            settingsSaved: 'Paramètres enregistrés avec succès'
         },
         // Footer
         footer: {
