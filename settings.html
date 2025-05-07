@@ -15,15 +15,18 @@
             <div class="logo">
                 <h1>حفظ القرآن</h1>
             </div>
-            <ul class="nav-links">
-                <li><a href="index.html"><i class="fas fa-book"></i> صفحة الحفظ</a></li>
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> صفحة الحفظ</a></li>
                 <li><a href="sessions.html"><i class="fas fa-history"></i> الجلسات السابقة</a></li>
                 <li><a href="virtues.html"><i class="fas fa-star"></i> فضل الحفظ</a></li>
                 <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> الإعدادات</a></li>
             </ul>
-            <button id="theme-toggle" class="btn-theme">🌙</button>
         </div>
     </nav>
+    <div class="menu-overlay" id="menu-overlay"></div>
 
     <div class="container">
         <main class="app-main">
@@ -93,5 +96,6 @@
     </footer>
 
     <script src="assets/settings.js"></script>
+    <script src="assets/script.js"></script>
 </body>
 </html> 

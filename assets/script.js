@@ -207,7 +207,7 @@ class TextRepeater {
             }
 
             // Show history after successful save
-            this.showHistory();
+            await this.showHistory();
         } catch (error) {
             console.error('Error saving session:', error);
             this.showError('حدث خطأ أثناء حفظ الجلسة');
@@ -216,6 +216,10 @@ class TextRepeater {
     async showHistory() {
         try {
             const response = await fetch('http://localhost:3000/api/sessions');
+            if (!response.ok) {
+                throw new Error('Failed to fetch sessions');
+            }
+            
             const sessions = await response.json();
             const container = document.getElementById('history-list');
             const historySection = document.getElementById('session-history');
@@ -232,6 +236,8 @@ class TextRepeater {
                         </div>
                     </div>
                 `).join('');
+            } else {
+                historySection.classList.add('hidden');
             }
         } catch (error) {
             console.error('Error loading history:', error);
@@ -242,8 +248,11 @@ class TextRepeater {
     async loadSession(sessionId) {
         try {
             const response = await fetch(`http://localhost:3000/api/sessions/${sessionId}`);
-            const session = await response.json();
+            if (!response.ok) {
+                throw new Error('Failed to fetch session');
+            }
             
+            const session = await response.json();
             if (session) {
                 document.getElementById('input-text').value = session.text;
                 document.getElementById('section-count').value = session.sections;
@@ -259,40 +268,20 @@ class TextRepeater {
     async deleteSession(sessionId) {
         if (confirm('هل أنت متأكد من حذف هذه الجلسة؟')) {
             try {
-        // Sauvegarde dans localStorage
-        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
-        history.unshift(sessionData);
-        localStorage.setItem('memorizationHistory', JSON.stringify(history.slice(0, 10)));
-        
-        // Afficher l'historique
-        this.showHistory();
-    }
-    showHistory() {
-        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
-        const container = document.getElementById('history-list');
-        const historySection = document.getElementById('session-history');
-        
-        if (history.length > 0) {
-            historySection.classList.remove('hidden');
-            container.innerHTML = history.map((session, index) => `
-                <div class="history-item">
-                    <h3>الجلسة ${index + 1} (${session.date})</h3>
-                    <p>الوقت: ${session.time} | الأقسام: ${session.sections}</p>
-                    <button onclick="app.loadSession(${index})" class="btn-secondary">تحميل</button>
-                </div>
-            `).join('');
-        }
-    }
-    
-    loadSession(index) {
-        const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
-        const session = history[index];
-        
-        if (session) {
-            document.getElementById('input-text').value = session.text;
-            document.getElementById('section-count').value = session.sections;
-            document.getElementById('repeat-count').value = session.repeats;
-            alert('تم تحميل الجلسة! انقر على "بدء الحفظ" للبدء');
+                const response = await fetch(`http://localhost:3000/api/sessions/${sessionId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete session');
+                }
+
+                // Refresh history after deletion
+                await this.showHistory();
+            } catch (error) {
+                console.error('Error deleting session:', error);
+                this.showError('حدث خطأ أثناء حذف الجلسة');
+            }
         }
     }
 

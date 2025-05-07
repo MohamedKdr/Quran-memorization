@@ -15,15 +15,18 @@
             <div class="logo">
                 <h1>حفظ القرآن</h1>
             </div>
-            <ul class="nav-links">
-                <li><a href="index.html"><i class="fas fa-book"></i> صفحة الحفظ</a></li>
+            <button class="menu-toggle" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> صفحة الحفظ</a></li>
                 <li><a href="sessions.html"><i class="fas fa-history"></i> الجلسات السابقة</a></li>
                 <li><a href="virtues.html" class="active"><i class="fas fa-star"></i> فضل الحفظ</a></li>
                 <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات</a></li>
             </ul>
-            <button id="theme-toggle" class="btn-theme">🌙</button>
         </div>
     </nav>
+    <div class="menu-overlay" id="menu-overlay"></div>
 
     <div class="container">
         <main class="app-main">
@@ -54,22 +57,22 @@
 
                 <div class="virtue-card">
                     <div class="virtue-icon">
-                        <i class="fas fa-heart"></i>
+                        <i class="fas fa-book-open"></i>
                     </div>
                     <div class="virtue-content">
                         <h3>شفاعة القرآن</h3>
-                        <p class="hadith">قال رسول الله صلى الله عليه وسلم: "اقرأوا القرآن فإنه يأتي يوم القيامة شفيعاً لأصحابه"</p>
+                        <p class="hadith">قال رسول الله صلى الله عليه وسلم: "اقرؤوا القرآن فإنه يأتي يوم القيامة شفيعاً لأصحابه"</p>
                         <p class="source">رواه مسلم</p>
                     </div>
                 </div>
 
                 <div class="virtue-card">
                     <div class="virtue-icon">
-                        <i class="fas fa-award"></i>
+                        <i class="fas fa-gift"></i>
                     </div>
                     <div class="virtue-content">
                         <h3>الأجر المضاعف</h3>
-                        <p class="hadith">قال رسول الله صلى الله عليه وسلم: "من قرأ حرفاً من كتاب الله فله به حسنة، والحسنة بعشر أمثالها، لا أقول: الم حرف، ولكن ألف حرف، ولام حرف، وميم حرف"</p>
+                        <p class="hadith">قال رسول الله صلى الله عليه وسلم: "من قرأ حرفاً من كتاب الله فله به حسنة، والحسنة بعشر أمثالها"</p>
                         <p class="source">رواه الترمذي</p>
                     </div>
                 </div>
@@ -89,6 +92,6 @@
         </div>
     </footer>
 
-    <script src="assets/virtues.js"></script>
+    <script src="assets/script.js"></script>
 </body>
 </html> 
