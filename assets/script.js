@@ -8,12 +8,14 @@ class TextRepeater {
         this.totalRepeats = 0;
         this.fullTextRepeats = 0;
         this.sectionsData = [];
+        this.errorContainer = this.createErrorContainer();
         this.initialize();
     }
 
     initialize() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
+        document.getElementById('pause-timer').addEventListener('click', () => this.toggleTimer());
     }
 
     handleSubmit(e) {
@@ -32,12 +34,27 @@ class TextRepeater {
 
     validateInputs(text, sectionsCount) {
         const errorMessages = [];
-        if (!text) errorMessages.push('الرجاء إدخال النص');
-        if (isNaN(sectionsCount) || sectionsCount < 1) errorMessages.push('عدد الأقسام غير صحيح');
-        if (isNaN(this.totalRepeats) || this.totalRepeats < 1) errorMessages.push('عدد التكرارات غير صحيح');
+        
+        if (!text) {
+            errorMessages.push('الرجاء إدخال النص');
+        } else if (text.length < 10) {
+            errorMessages.push('النص قصير جداً. يجب أن يكون طول النص 10 أحرف على الأقل');
+        }
+        
+        if (isNaN(sectionsCount) || sectionsCount < 1) {
+            errorMessages.push('عدد الأقسام غير صحيح');
+        } else if (sectionsCount > 20) {
+            errorMessages.push('الحد الأقصى لعدد الأقسام هو 20');
+        }
+        
+        if (isNaN(this.totalRepeats) || this.totalRepeats < 1) {
+            errorMessages.push('عدد التكرارات غير صحيح');
+        } else if (this.totalRepeats > 100) {
+            errorMessages.push('الحد الأقصى لعدد التكرارات هو 100');
+        }
 
         if (errorMessages.length > 0) {
-            alert(errorMessages.join('\n'));
+            this.showError(errorMessages.join('\n'));
             return false;
         }
         return true;
@@ -144,14 +161,14 @@ class TextRepeater {
         this.sectionsContainer.classList.add('hidden');
         this.finalSection.classList.remove('hidden');
         this.fullTextRepeats = this.totalRepeats;
-        this.finalSection.querySelector('.counter').textContent = 
-            `التكرارات المتبقية: ${this.fullTextRepeats}`;
+        const counter = this.finalSection.querySelector('#full-text-counter');
+        counter.textContent = this.fullTextRepeats;
     }
 
     handleFinalRepeat() {
         this.fullTextRepeats--;
-        const counter = this.finalSection.querySelector('.counter');
-        counter.textContent = `التكرارات المتبقية: ${this.fullTextRepeats}`;
+        const counter = this.finalSection.querySelector('#full-text-counter');
+        counter.textContent = this.fullTextRepeats;
     
         if (this.fullTextRepeats <= 0) {
             this.timer.stop();
@@ -162,9 +179,11 @@ class TextRepeater {
     }
 
     showCongratulations() {
-        document.getElementById('total-time').textContent = 
-            document.getElementById('elapsed-time').textContent;
+        const totalTime = document.getElementById('elapsed-time').textContent;
+        document.getElementById('total-time').textContent = totalTime;
         document.getElementById('congrats-message').classList.remove('hidden');
+        // Reset timer display
+        document.getElementById('elapsed-time').textContent = '00:00';
     }
     async saveSession() {
         const sessionData = {
@@ -227,6 +246,32 @@ class TextRepeater {
         
         document.querySelector('.progress-bar').style.width = `${progress}%`;
     }
+
+    createErrorContainer() {
+        const container = document.createElement('div');
+        container.className = 'error-container hidden';
+        document.querySelector('.app-main').insertBefore(container, this.form);
+        return container;
+    }
+
+    showError(message) {
+        this.errorContainer.textContent = message;
+        this.errorContainer.classList.remove('hidden');
+        setTimeout(() => {
+            this.errorContainer.classList.add('hidden');
+        }, 3000);
+    }
+
+    toggleTimer() {
+        const pauseButton = document.getElementById('pause-timer');
+        if (this.timer.isPaused) {
+            this.timer.resume();
+            pauseButton.textContent = '⏸️';
+        } else {
+            this.timer.pause();
+            pauseButton.textContent = '▶️';
+        }
+    }
 }
 
 class Timer {
@@ -234,36 +279,64 @@ class Timer {
         this.timerElement = document.getElementById('timer');
         this.timeDisplay = document.getElementById('elapsed-time');
         this.startTime = null;
+        this.pauseTime = null;
+        this.totalPausedTime = 0;
         this.interval = null;
+        this.isPaused = false;
     }
 
     start() {
         this.reset();
         this.startTime = Date.now();
         this.timerElement.classList.remove('hidden');
+        this.isPaused = false;
         
         this.interval = setInterval(() => {
-            const elapsed = Date.now() - this.startTime;
-            this.timeDisplay.textContent = this.formatTime(elapsed);
+            if (!this.isPaused) {
+                const elapsed = Date.now() - this.startTime - this.totalPausedTime;
+                this.timeDisplay.textContent = this.formatTime(elapsed);
+            }
         }, 1000);
     }
 
-    formatTime(ms) {
-        const totalSeconds = Math.floor(ms / 1000);
-        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-        const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-        return hours > 0 ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`;
+    pause() {
+        if (!this.isPaused) {
+            this.isPaused = true;
+            this.pauseTime = Date.now();
+            this.timerElement.classList.add('paused');
+        }
+    }
+
+    resume() {
+        if (this.isPaused) {
+            this.isPaused = false;
+            this.totalPausedTime += Date.now() - this.pauseTime;
+            this.timerElement.classList.remove('paused');
+        }
     }
 
     stop() {
-        clearInterval(this.interval);
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+        this.timerElement.classList.add('hidden');
     }
 
     reset() {
         this.stop();
+        this.startTime = null;
+        this.pauseTime = null;
+        this.totalPausedTime = 0;
+        this.isPaused = false;
         this.timeDisplay.textContent = '00:00';
-        this.timerElement.classList.add('hidden');
+    }
+
+    formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 }
 
