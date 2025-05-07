@@ -14,7 +14,6 @@ class TextRepeater {
 
     initialize() {
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
-        document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
         document.getElementById('pause-timer').addEventListener('click', () => this.toggleTimer());
     }
 
@@ -193,7 +192,73 @@ class TextRepeater {
             time: document.getElementById('elapsed-time').textContent,
             date: new Date().toLocaleString('ar-EG')
         };
+
+        try {
+            const response = await fetch('http://localhost:3000/api/sessions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(sessionData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save session');
+            }
+
+            // Show history after successful save
+            this.showHistory();
+        } catch (error) {
+            console.error('Error saving session:', error);
+            this.showError('حدث خطأ أثناء حفظ الجلسة');
+        }
+    }
+    async showHistory() {
+        try {
+            const response = await fetch('http://localhost:3000/api/sessions');
+            const sessions = await response.json();
+            const container = document.getElementById('history-list');
+            const historySection = document.getElementById('session-history');
+            
+            if (sessions.length > 0) {
+                historySection.classList.remove('hidden');
+                container.innerHTML = sessions.map((session, index) => `
+                    <div class="history-item">
+                        <h3>الجلسة ${index + 1} (${new Date(session.date).toLocaleString('ar-EG')})</h3>
+                        <p>الوقت: ${session.time} | الأقسام: ${session.sections}</p>
+                        <div class="history-actions">
+                            <button onclick="app.loadSession('${session._id}')" class="btn-secondary">تحميل</button>
+                            <button onclick="app.deleteSession('${session._id}')" class="btn-danger">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading history:', error);
+            this.showError('حدث خطأ أثناء تحميل السجل');
+        }
+    }
     
+    async loadSession(sessionId) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/sessions/${sessionId}`);
+            const session = await response.json();
+            
+            if (session) {
+                document.getElementById('input-text').value = session.text;
+                document.getElementById('section-count').value = session.sections;
+                document.getElementById('repeat-count').value = session.repeats;
+                alert('تم تحميل الجلسة! انقر على "بدء الحفظ" للبدء');
+            }
+        } catch (error) {
+            console.error('Error loading session:', error);
+            this.showError('حدث خطأ أثناء تحميل الجلسة');
+        }
+    }
+
+    async deleteSession(sessionId) {
+        if (confirm('هل أنت متأكد من حذف هذه الجلسة؟')) {
+            try {
         // Sauvegarde dans localStorage
         const history = JSON.parse(localStorage.getItem('memorizationHistory') || '[]');
         history.unshift(sessionData);
@@ -229,14 +294,6 @@ class TextRepeater {
             document.getElementById('repeat-count').value = session.repeats;
             alert('تم تحميل الجلسة! انقر على "بدء الحفظ" للبدء');
         }
-    }
-
-
-    toggleTheme() {
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
     }
 
     updateProgress() {
@@ -340,10 +397,168 @@ class Timer {
     }
 }
 
+class SectionManager {
+    constructor() {
+        this.currentSection = 0;
+        this.sections = document.querySelectorAll('.section');
+        this.totalSections = this.sections.length;
+        this.initializeSections();
+    }
+
+    initializeSections() {
+        // Hide all sections except the first one
+        this.sections.forEach((section, index) => {
+            if (index === 0) {
+                section.classList.add('active');
+            } else {
+                section.classList.remove('active');
+            }
+        });
+
+        // Add section numbers
+        this.sections.forEach((section, index) => {
+            const header = section.querySelector('.section-header');
+            if (header) {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'section-number';
+                numberDiv.textContent = `القسم ${index + 1}`;
+                header.prepend(numberDiv);
+            }
+        });
+
+        // Add progress indicator
+        this.updateProgress();
+    }
+
+    nextSection() {
+        if (this.currentSection < this.totalSections - 1) {
+            // Mark current section as completed
+            this.sections[this.currentSection].classList.add('completed');
+            
+            // Hide current section
+            this.sections[this.currentSection].classList.remove('active');
+            
+            // Show next section
+            this.currentSection++;
+            this.sections[this.currentSection].classList.add('active');
+            
+            // Update progress
+            this.updateProgress();
+            
+            // Scroll to the new section
+            this.sections[this.currentSection].scrollIntoView({ behavior: 'smooth' });
+            
+            return true;
+        }
+        return false;
+    }
+
+    previousSection() {
+        if (this.currentSection > 0) {
+            // Hide current section
+            this.sections[this.currentSection].classList.remove('active');
+            
+            // Show previous section
+            this.currentSection--;
+            this.sections[this.currentSection].classList.add('active');
+            
+            // Update progress
+            this.updateProgress();
+            
+            // Scroll to the previous section
+            this.sections[this.currentSection].scrollIntoView({ behavior: 'smooth' });
+            
+            return true;
+        }
+        return false;
+    }
+
+    updateProgress() {
+        const progress = ((this.currentSection + 1) / this.totalSections) * 100;
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+        }
+    }
+
+    getCurrentSection() {
+        return this.currentSection;
+    }
+
+    getTotalSections() {
+        return this.totalSections;
+    }
+}
+
+// Mobile Menu Functionality
+class MobileMenu {
+    constructor() {
+        this.menuToggle = document.getElementById('menu-toggle');
+        this.navLinks = document.getElementById('nav-links');
+        this.menuOverlay = document.getElementById('menu-overlay');
+        this.isOpen = false;
+        this.initialize();
+    }
+
+    initialize() {
+        this.menuToggle.addEventListener('click', () => this.toggleMenu());
+        this.menuOverlay.addEventListener('click', () => this.closeMenu());
+        
+        // Add touch events for swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        this.navLinks.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        this.navLinks.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        });
+        
+        // Close menu when clicking a link
+        this.navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => this.closeMenu());
+        });
+    }
+
+    toggleMenu() {
+        this.isOpen = !this.isOpen;
+        this.navLinks.classList.toggle('active');
+        this.menuOverlay.classList.toggle('active');
+        this.menuToggle.innerHTML = this.isOpen ? 
+            '<i class="fas fa-times"></i>' : 
+            '<i class="fas fa-bars"></i>';
+    }
+
+    closeMenu() {
+        if (this.isOpen) {
+            this.isOpen = false;
+            this.navLinks.classList.remove('active');
+            this.menuOverlay.classList.remove('active');
+            this.menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+    }
+
+    handleSwipe(startX, endX) {
+        const swipeThreshold = 50;
+        const swipeDistance = endX - startX;
+        
+        if (Math.abs(swipeDistance) > swipeThreshold) {
+            if (swipeDistance > 0 && this.isOpen) {
+                // Swipe right - close menu
+                this.closeMenu();
+            } else if (swipeDistance < 0 && !this.isOpen) {
+                // Swipe left - open menu
+                this.toggleMenu();
+            }
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.setAttribute('data-theme', savedTheme);
-    document.getElementById('theme-toggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-    
     new TextRepeater();
+    window.sectionManager = new SectionManager();
+    window.mobileMenu = new MobileMenu();
 });
