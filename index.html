@@ -3,105 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="أداة مساعدة لحفظ النصوص عبر التكرار والتقسيم">
-    <title>المحظرة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>تطبيق حفظ القرآن الكريم</title>
     <link rel="stylesheet" href="assets/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4d6.png">
+    <!-- أيقونة مصحف أخضر حديثة -->
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-container">
-            <div class="logo">
-                <h1>المحظرة</h1>
-            </div>
-            <button class="menu-toggle" id="menu-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <ul class="nav-links" id="nav-links">
-                <li><a href="index.html" class="active"><i class="fas fa-home"></i> صفحة الحفظ</a></li>
-                <li><a href="sessions.html"><i class="fas fa-history"></i> الجلسات السابقة</a></li>
-                <li><a href="virtues.html"><i class="fas fa-star"></i> فضل الحفظ</a></li>
-                
-            </ul>
-        </div>
-    </nav>
-    <div class="menu-overlay" id="menu-overlay"></div>
-
     <div class="container">
-        <main class="app-main">
-            <form id="text-form" class="input-form">
-                <div class="form-group">
-                    <label for="input-text">النص المراد حفظه</label>
-                    <textarea id="input-text" placeholder="أدخل النص هنا..." rows="5" required></textarea>
+        <header class="header">
+            <h1>تطبيق حفظ القرآن الكريم</h1>
+        </header>
+
+        <nav class="nav">
+            <button class="nav-button active" data-tooltip="ابدأ حفظ سورة جديدة">حفظ جديد</button>
+            <button class="nav-button" data-tooltip="راجع السور المحفوظة">المراجعة</button>
+            <button class="nav-button" data-tooltip="شاهد إحصائيات الحفظ">الإحصائيات</button>
+        </nav>
+
+        <main class="main-content">
+            <section class="surah-selection">
+                <div class="selection-group">
+                    <select class="surah-select" id="surahSelect">
+                        <option value="">اختر السورة</option>
+                    </select>
                 </div>
-
-                <div class="input-grid">
-                    <div class="form-group">
-                        <label for="section-count">عدد الأقسام</label>
-                        <input type="number" id="section-count" min="1" value="3" required>
+                
+                <div class="verse-range">
+                    <div class="range-group">
+                        <label for="startVerse">من الآية:</label>
+                        <input type="number" id="startVerse" min="1" value="1">
                     </div>
-
-                    <div class="form-group">
-                        <label for="repeat-count">عدد التكرارات</label>
-                        <input type="number" id="repeat-count" min="1" value="5" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-primary">بدء الحفظ</button>
-            </form>
-            
-            <div id="session-history" class="hidden">
-                <h2>الجلسات السابقة</h2>
-                <div class="progress-container">
-                    <div class="progress-bar"></div>
-                </div>
-                <div id="history-list"></div>
-            </div>
-            <div id="sections-container" class="hidden"></div>
-
-            <div id="final-section" class="hidden">
-                <div class="section">
-                    <div class="section-header">
-                        <h3>التكرار النهائي</h3>
-                        <button class="toggle-btn">👁️</button>
-                    </div>
-                    <div class="section-content"></div>
-                    <div class="section-controls">
-                        <span class="counter">التكرارات المتبقية: <span id="full-text-counter">0</span></span>
-                        <button id="repeat-full-text" class="btn-primary">كرر النص كاملاً</button>
+                    <div class="range-group">
+                        <label for="endVerse">إلى الآية:</label>
+                        <input type="number" id="endVerse" min="1" value="1">
                     </div>
                 </div>
-            </div>
 
-            <div id="timer" class="timer hidden">
-                <div class="timer-content">
-                    <span class="icon">⏳</span>
-                    <span id="elapsed-time">00:00</span>
-                    <button id="pause-timer" class="btn-secondary">⏸️</button>
+                <div class="memorization-settings">
+                    <div class="setting-group">
+                        <label for="sectionCount">عدد الأقسام:</label>
+                        <input type="number" id="sectionCount" min="1" value="3">
+                    </div>
+                    <div class="setting-group">
+                        <label for="repeatCount">عدد التكرارات لكل قسم:</label>
+                        <input type="number" id="repeatCount" min="1" value="5">
+                    </div>
                 </div>
-            </div>
 
-            <div id="congrats-message" class="hidden">
-                <div class="confetti"></div>
-                <h2>مبروك! لقد أكملت الحفظ</h2>
-                <p>الوقت المستغرق: <span id="total-time">00:00</span></p>
-                <button onclick="location.reload()" class="btn-primary">بدء جديد</button>
-            </div>
+                <button class="button button-primary" id="startButton" data-tooltip="ابدأ الحفظ">ابدأ الحفظ</button>
+                <button class="button button-secondary" id="tryOtherMethod" data-tooltip="الصق نصك الخاص">تجربة طريقة أخرى</button>
+                <div id="customTextArea" class="hidden" style="margin-top:1.5rem;">
+                    <label for="customText" style="font-weight:600; color:var(--primary-color);">النص المراد حفظه (ألصق نصك هنا):</label>
+                    <textarea id="customText" rows="4" style="width:100%;border-radius:12px;padding:0.7rem;margin:0.5rem 0;"></textarea>
+                    <button class="button button-primary" id="startCustomMemorization" data-tooltip="ابدأ الحفظ بالنص المخصص">ابدأ الحفظ بالنص المخصص</button>
+                </div>
+            </section>
+
+            <section class="memorization-area hidden">
+                <div class="section-info">
+                    <h3>القسم <span id="currentSection">1</span> من <span id="totalSections">3</span></h3>
+                    <p>التكرار <span id="currentRepeat">1</span> من <span id="totalRepeats">5</span></p>
+                </div>
+
+                <div class="verse-display" id="verseDisplay">
+                    اختر السورة وابدأ الحفظ
+                </div>
+
+                <div class="memorization-controls">
+                    <div class="control-buttons">
+                        <button class="button button-primary" id="repeatButton" data-tooltip="كرر القسم">
+                            <span class="repeat-text">كرر</span>
+                            <span class="repeat-count">(<span id="remainingRepeats">5</span> متبقي)</span>
+                        </button>
+                    </div>
+                    <div class="timer-display">
+                        <span id="timer">00:00</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="final-section hidden">
+                <h2>القسم النهائي</h2>
+                <div class="section-info">
+                    <p>التكرار <span id="finalCurrentRepeat">1</span> من <span id="finalTotalRepeats">5</span></p>
+                </div>
+                <div class="verse-display" id="finalDisplay"></div>
+                <div class="memorization-controls">
+                    <div class="control-buttons">
+                        <button class="button button-primary" id="repeatFinalButton" data-tooltip="كرر النص كاملاً">
+                            <span class="repeat-text">كرر</span>
+                            <span class="repeat-count">(<span id="finalRemainingRepeats">5</span> متبقي)</span>
+                        </button>
+                    </div>
+                    <div class="timer-display">
+                        <span id="finalTimer">00:00</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="progress-section hidden" id="statsSection">
+                <h2>الإحصائيات</h2>
+                <div class="statistics-grid">
+                    <div class="stat-card">
+                        <h3>عدد السور المحفوظة</h3>
+                        <div class="stat-value" id="statSurahs">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>عدد الجلسات</h3>
+                        <div class="stat-value" id="statSessions">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>إجمالي مدة الحفظ</h3>
+                        <div class="stat-value" id="statTotalTime">00:00</div>
+                    </div>
+                </div>
+                <div class="stat-activity">
+                    <h3>نشاط الأسبوع</h3>
+                    <canvas id="weekChart" height="120"></canvas>
+                </div>
+            </section>
+
+            <section class="review-section hidden" id="reviewSection">
+                <h2>السور المحفوظة</h2>
+                <div id="review-list"></div>
+            </section>
         </main>
     </div>
-
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="social-links">
-                <a href="https://github.com/MohamedKdr" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.facebook.com/profile.php?id=61563049206402" target="_blank"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.linkedin.com/in/mouhamed-abdelkader-7b02682b2/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com/mokader2005/" target="_blank"><i class="fab fa-instagram"></i></a>
-            </div>
-            <p class="copyright">© 2024 المحظرة. جميع الحقوق محفوظة</p>
-        </div>
-    </footer>
 
     <script src="assets/script.js"></script>
 </body>
